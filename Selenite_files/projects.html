@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<!-- saved from url=(0108)https://selenite.cc/loader.html?title=Doki%20Doki%20Literature%20Club&dir=ddlc&img=icons/web-icon.png&type=g -->
+<html class="sl-theme-dark" lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<!-- initialize theme vars
+    https://coolors.co/10002b-240046-3c096c-5a189a-7b2cbf-9d4edd-c77dff-e0aaff -->
+
+		<!-- initialize externals -->
+
+		<!-- initialize my stuff -->
+		<script src="./all.min.js"></script>
+		<script>
+			document.addEventListener("DOMContentLoaded", () => {
+				let gameData = {};
+				if (location.search != "") {
+					let items = {};
+					location.search.substr(1).split("&").forEach((e)=>{
+						items[e.split("=")[0]] = e.split("=")[1]
+					});
+					if(items.type == "g") {
+						items.type = "semag";
+						gameData["type"] = "g";
+					} else {
+						items.type = "sppa";
+						gameData["type"] = "a";
+					}
+					document.getElementById("gameFrame").setAttribute("src", `/resources/${items.type}/${items.dir}/index.html`);
+					document.getElementById("gameImage").setAttribute("src", `/resources/${items.type}/${items.dir}/${items.img}`);
+					document.getElementById("gameName").innerText = decodeURIComponent(items.title);
+					gameData["path"] = items.dir;
+				} else if(localStorage.getItem("selenite.lastGame")) {
+					let game = JSON.parse(decodeURIComponent(atob(localStorage.getItem("selenite.lastGame"))));
+					document.getElementById("gameFrame").setAttribute("src", `/resources/${items.type}/${game[0]}/index.html`);
+					document.getElementById("gameImage").setAttribute("src", `/resources/${items.type}/${game[0]}/${decodeURIComponent(game[1])}`);
+					document.getElementById("gameName").innerText = game[2];
+					gameData["path"] = game[0];
+					gameData["type"] = items.type == "semag" ? "g" : "a";
+				}
+				document.getElementById("fullscreen").addEventListener("click", () => {
+					document.getElementById("gameFrame").requestFullscreen();
+				});
+				document.getElementById("reload").addEventListener("click", () => {
+					document.getElementById("gameFrame").src = document.getElementById("gameFrame").src;
+				});
+				document.getElementById("open").addEventListener("click", () => {
+					window.open(document.getElementById("gameFrame").src);
+				});
+				document.getElementById("share").addEventListener("click", () => {
+					let link = location.origin + "#/" + gameData["type"] + "/" + gameData["path"];
+					navigator.clipboard.writeText(link);
+				});
+			});
+		</script>
+
+		<link rel="stylesheet" href="./main.css">
+		<link rel="stylesheet" href="./pages.css">
+		<link rel="stylesheet" href="./loader.css">
+		<!-- seo + other things -->
+		<title>Selenite</title>
+		<link rel="icon" href="https://selenite.cc/favicon.ico">
+	</head>
+	<body>
+		<iframe id="gameFrame" sandbox="allow-downloads allow-forms allow-modals allow-pointer-lock allow-scripts allow-same-origin" allow="cross-origin-isolated" src="./index.html"></iframe>
+		<div id="infobox">
+			<img id="gameImage" src="./web-icon.png">
+			<h2 id="gameName">Doki Doki Literature Club</h2>
+			<div class="opposite">
+				<img class="button" id="reload" src="./reload.svg">
+				<img class="button" id="fullscreen" src="./fullscreen.svg">
+				<img class="button" id="open" src="./open.svg">
+				<img class="button" id="share" src="./share.svg">
+			</div>
+		</div>
+	
+
+</body></html>
